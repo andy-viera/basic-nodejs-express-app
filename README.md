@@ -1,4 +1,4 @@
-# Basic Node.js Express App
+# Node.js & Express App
 
 A minimalist Node.js & Express.js application with TypeScript, PostgreSQL as main database, and Redis for rate limiting. With CRUD operations for authors, categories, and books, following a basic RESTful API design.
 
