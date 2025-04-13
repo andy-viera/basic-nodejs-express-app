@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import Book from "../models/Book";
 import {
-  ApiResponse,
   BookResponse,
   CreateBookDto,
   UpdateBookDto,
-} from "../types/api";
+  ApiResponse,
+} from "../dto";
+import { BookService } from "../services/book.service";
+
+const bookService = new BookService();
 
 const getBooks = async (
   req: Request,
@@ -13,7 +15,7 @@ const getBooks = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const result = await Book.findAll();
+    const result = await bookService.getAllBooks();
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -27,7 +29,7 @@ const getBookById = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const result = await Book.findByPk(id);
+    const result = await bookService.getBookById(id);
     if (!result) {
       res.status(404).json({ success: false, error: "Book not found" });
       return;
@@ -44,17 +46,7 @@ const createBook = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { title, authorId, categoryId, price, publishedDate, isbn } =
-      req.body;
-
-    const result = await Book.create({
-      title,
-      author_id: authorId,
-      category_id: categoryId,
-      price,
-      published_date: publishedDate,
-      isbn,
-    });
+    const result = await bookService.createBook(req.body);
     res.status(201).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -68,20 +60,7 @@ const updateBook = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { title, authorId, categoryId, price, publishedDate, isbn } =
-      req.body;
-
-    const result = await Book.update(
-      {
-        title,
-        author_id: authorId,
-        category_id: categoryId,
-        price,
-        published_date: publishedDate,
-        isbn,
-      },
-      { where: { book_id: id } }
-    );
+    const result = await bookService.updateBook(id, req.body);
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -95,7 +74,7 @@ const deleteBook = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    await Book.destroy({ where: { book_id: id } });
+    await bookService.deleteBook(id);
     res.status(204).json({ success: true });
   } catch (error) {
     next(error);

@@ -1,13 +1,13 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import {
   getAuthors,
   getAuthorById,
   createAuthor,
   updateAuthor,
   deleteAuthor,
-} from "../controllers/authorsController";
+} from "../controllers/author.controller";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/", getAuthors);
 router.get("/:id", getAuthorById);

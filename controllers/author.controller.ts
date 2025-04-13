@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import Author from "../models/Author";
+import { AuthorService } from "../services/author.service";
 import {
   ApiResponse,
   AuthorResponse,
   CreateAuthorDto,
   UpdateAuthorDto,
-} from "../types/api";
+} from "../dto";
+
+const authorService = new AuthorService();
 
 const getAuthors = async (
   req: Request,
@@ -13,7 +15,7 @@ const getAuthors = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const result = await Author.findAll();
+    const result = await authorService.getAllAuthors();
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -27,7 +29,7 @@ const getAuthorById = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const result = await Author.findByPk(id);
+    const result = await authorService.getAuthorById(id);
     if (!result) {
       res.status(404).json({ success: false, error: "Author not found" });
       return;
@@ -44,14 +46,7 @@ const createAuthor = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { name, biography, birthDate, deathDate } = req.body;
-
-    const result = await Author.create({
-      name,
-      biography,
-      birth_date: birthDate,
-      death_date: deathDate,
-    });
+    const result = await authorService.createAuthor(req.body);
     res.status(201).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -65,17 +60,7 @@ const updateAuthor = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, biography, birthDate, deathDate } = req.body;
-
-    const result = await Author.update(
-      {
-        name,
-        biography,
-        birth_date: birthDate,
-        death_date: deathDate,
-      },
-      { where: { author_id: id } }
-    );
+    const result = await authorService.updateAuthor(id, req.body);
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -89,7 +74,7 @@ const deleteAuthor = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    await Author.destroy({ where: { author_id: id } });
+    await authorService.deleteAuthor(id);
     res.status(204).json({ success: true });
   } catch (error) {
     next(error);

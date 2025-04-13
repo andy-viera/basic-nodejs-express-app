@@ -1,13 +1,13 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import {
   getCategories,
   getCategoryById,
   createCategory,
   updateCategory,
   deleteCategory,
-} from "../controllers/categoriesController";
+} from "../controllers/category.controller";
 
-const router: Router = express.Router();
+const router: Router = Router();
 
 router.get("/", getCategories);
 router.get("/:id", getCategoryById);

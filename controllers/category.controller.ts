@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import Category from "../models/Category";
+import { CategoryService } from "../services/category.service";
 import {
   ApiResponse,
   CategoryResponse,
   CreateCategoryDto,
   UpdateCategoryDto,
-} from "../types/api";
+} from "../dto";
+
+const categoryService = new CategoryService();
 
 const getCategories = async (
   req: Request,
@@ -13,7 +15,7 @@ const getCategories = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const result = await Category.findAll();
+    const result = await categoryService.getAllCategories();
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -27,7 +29,7 @@ const getCategoryById = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const result = await Category.findByPk(id);
+    const result = await categoryService.getCategoryById(id);
     if (!result) {
       res.status(404).json({ success: false, error: "Category not found" });
       return;
@@ -44,12 +46,7 @@ const createCategory = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { name, description } = req.body;
-
-    const result = await Category.create({
-      name,
-      description,
-    });
+    const result = await categoryService.createCategory(req.body);
     res.status(201).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -63,15 +60,7 @@ const updateCategory = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
-
-    const result = await Category.update(
-      {
-        name,
-        description,
-      },
-      { where: { category_id: id } }
-    );
+    const result = await categoryService.updateCategory(id, req.body);
     res.json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -85,7 +74,7 @@ const deleteCategory = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    await Category.destroy({ where: { category_id: id } });
+    await categoryService.deleteCategory(id);
     res.status(204).json({ success: true });
   } catch (error) {
     next(error);

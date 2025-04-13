@@ -1,11 +1,10 @@
 # Basic Node.js Express App
 
-A minimalist Express.js application with TypeScript and PostgreSQL.
+A minimalist Node.js & Express.js application with TypeScript, PostgreSQL as main database, and Redis for rate limiting. With CRUD operations for authors, categories, and books, following a basic RESTful API design.
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- PostgreSQL
 - Pnpm
 - Docker
 
@@ -39,13 +38,3 @@ pnpm run dev
 ```
 
 The server will start on `http://localhost:3000` (or the port specified in your `.env` file).
-
-## Testing
-
-To run the tests:
-
-```bash
-pnpm run test
-```
-
-This will run the tests using Jest and display the results.

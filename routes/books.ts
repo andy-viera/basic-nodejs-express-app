@@ -1,13 +1,13 @@
-import express from "express";
+import { Router } from "express";
 import {
   getBooks,
   getBookById,
   createBook,
   updateBook,
   deleteBook,
-} from "../controllers/booksController";
+} from "../controllers/book.controller";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/", getBooks);
 router.get("/:id", getBookById);
