@@ -13,8 +13,8 @@ A minimalist Node.js & Express.js application with TypeScript, PostgreSQL as mai
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd basic-nodejs-express-app
+git clone https://github.com/andy-viera/nodejs-express-app.git
+cd nodejs-express-app
 ```
 
 2. Install dependencies:
@@ -38,3 +38,11 @@ pnpm run dev
 ```
 
 The server will start on `http://localhost:3000` (or the port specified in your `.env` file).
+
+## Testing
+
+To run the tests, use the following command:
+
+```bash
+pnpm test
+```
